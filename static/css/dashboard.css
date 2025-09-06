@@ -1,0 +1,486 @@
+/* Dashboard Specific Styles */
+
+:root {
+    --dashboard-bg: #f8f9fc;
+    --dashboard-sidebar: #5a5c69;
+    --dashboard-primary: #4e73df;
+    --dashboard-success: #1cc88a;
+    --dashboard-info: #36b9cc;
+    --dashboard-warning: #f6c23e;
+    --dashboard-danger: #e74a3b;
+    --dashboard-card-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    --dashboard-border-color: #e3e6f0;
+}
+
+[data-theme="dark"] {
+    --dashboard-bg: #1a1a2e;
+    --dashboard-sidebar: #16213e;
+    --dashboard-primary: #6c5ce7;
+    --dashboard-success: #00b894;
+    --dashboard-info: #0984e3;
+    --dashboard-warning: #fdcb6e;
+    --dashboard-danger: #e17055;
+    --dashboard-card-shadow: 0 0.15rem 1.75rem 0 rgba(0, 0, 0, 0.3);
+    --dashboard-border-color: #374151;
+}
+
+body {
+    background-color: var(--dashboard-bg);
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+    transition: background-color 0.3s ease;
+}
+
+/* Custom Card Styles */
+.card {
+    border: 1px solid var(--dashboard-border-color);
+    border-radius: 0.35rem;
+    box-shadow: var(--dashboard-card-shadow);
+    transition: all 0.3s ease;
+    background-color: var(--bs-card-bg);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
+}
+
+/* Border Styling for Cards */
+.border-start-primary {
+    border-left: 0.25rem solid var(--dashboard-primary) !important;
+}
+
+.border-start-success {
+    border-left: 0.25rem solid var(--dashboard-success) !important;
+}
+
+.border-start-info {
+    border-left: 0.25rem solid var(--dashboard-info) !important;
+}
+
+.border-start-warning {
+    border-left: 0.25rem solid var(--dashboard-warning) !important;
+}
+
+/* Navigation Enhancements */
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 0.3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link.active {
+    color: rgba(255, 255, 255, 1);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Loading Animations */
+.loading-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, transparent 37%, #f0f0f0 63%);
+    background-size: 400% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+    border-radius: 4px;
+    height: 1.2em;
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+.loading-skeleton.small {
+    height: 0.8em;
+    width: 60%;
+}
+
+[data-theme="dark"] .loading-skeleton {
+    background: linear-gradient(90deg, #374151 25%, transparent 37%, #374151 63%);
+    background-size: 400% 100%;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+/* Chart Container */
+#price-chart {
+    background: var(--bs-card-bg);
+    border-radius: 0.35rem;
+    padding: 1rem;
+}
+
+/* Quick Analysis Results */
+.analysis-results-mini {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 1rem;
+    background: var(--bs-gray-100);
+    border-radius: 0.35rem;
+    border: 1px solid var(--dashboard-border-color);
+}
+
+[data-theme="dark"] .analysis-results-mini {
+    background: var(--dashboard-sidebar);
+    color: var(--text-primary);
+}
+
+.analysis-results-mini h6 {
+    color: var(--dashboard-primary);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.analysis-results-mini .metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--dashboard-border-color);
+}
+
+.analysis-results-mini .metric:last-child {
+    border-bottom: none;
+}
+
+/* Agent Status */
+.agent-status-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--dashboard-border-color);
+}
+
+.agent-status-item:last-child {
+    border-bottom: none;
+}
+
+.agent-status-item .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* News List */
+.news-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.news-item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--bs-gray-100);
+    border-radius: 0.35rem;
+    border-left: 4px solid var(--dashboard-primary);
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .news-item {
+    background: var(--dashboard-sidebar);
+    color: var(--text-primary);
+}
+
+.news-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 0.125rem 0.5rem rgba(58, 59, 69, 0.1);
+}
+
+.news-item h6 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.news-item .news-meta {
+    font-size: 0.8rem;
+    color: var(--bs-gray-600);
+    margin-bottom: 0.5rem;
+}
+
+.news-item .news-summary {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--bs-gray-700);
+}
+
+[data-theme="dark"] .news-item .news-summary {
+    color: var(--text-secondary);
+}
+
+/* Sentiment Indicators */
+.sentiment-positive {
+    color: var(--dashboard-success) !important;
+}
+
+.sentiment-negative {
+    color: var(--dashboard-danger) !important;
+}
+
+.sentiment-neutral {
+    color: var(--dashboard-warning) !important;
+}
+
+/* Price Change Indicators */
+.price-up {
+    color: var(--dashboard-success);
+}
+
+.price-down {
+    color: var(--dashboard-danger);
+}
+
+.price-up::before {
+    content: "↗ ";
+    font-weight: bold;
+}
+
+.price-down::before {
+    content: "↘ ";
+    font-weight: bold;
+}
+
+/* Detailed Analysis Results */
+.detailed-results {
+    min-height: 400px;
+}
+
+.detailed-results .analysis-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--bs-gray-50);
+    border-radius: 0.5rem;
+    border: 1px solid var(--dashboard-border-color);
+}
+
+[data-theme="dark"] .detailed-results .analysis-section {
+    background: var(--dashboard-sidebar);
+    color: var(--text-primary);
+}
+
+.detailed-results h4 {
+    color: var(--dashboard-primary);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--dashboard-primary);
+    padding-bottom: 0.5rem;
+}
+
+.detailed-results .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.detailed-results .metric-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 0.35rem;
+    border: 1px solid var(--dashboard-border-color);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .detailed-results .metric-card {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.detailed-results .metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.25rem 1rem rgba(58, 59, 69, 0.1);
+}
+
+.detailed-results .metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.detailed-results .metric-label {
+    font-size: 0.85rem;
+    color: var(--bs-gray-600);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+/* Modal Enhancements */
+.modal-content {
+    border: 1px solid var(--dashboard-border-color);
+    box-shadow: var(--dashboard-card-shadow);
+}
+
+.modal-header {
+    background: var(--dashboard-primary);
+    color: white;
+    border-bottom: none;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+/* Form Enhancements */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--dashboard-primary);
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+/* Button Enhancements */
+.btn-primary {
+    background-color: var(--dashboard-primary);
+    border-color: var(--dashboard-primary);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #2e59d9;
+    border-color: #2e59d9;
+    transform: translateY(-1px);
+    box-shadow: 0 0.25rem 1rem rgba(78, 115, 223, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .metric-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    #price-chart {
+        height: 300px !important;
+    }
+    
+    .news-item {
+        padding: 0.75rem;
+    }
+    
+    .detailed-results .analysis-section {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1rem;
+    }
+    
+    .h5 {
+        font-size: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dashboard-border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--dashboard-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #2e59d9;
+}
+
+/* Loading Placeholder */
+.loading-placeholder {
+    padding: 1rem;
+}
+
+.loading-placeholder .loading-skeleton:nth-child(1) {
+    width: 80%;
+}
+
+.loading-placeholder .loading-skeleton:nth-child(2) {
+    width: 60%;
+}
+
+.loading-placeholder .loading-skeleton:nth-child(3) {
+    width: 90%;
+}
+
+/* Theme Toggle Animation */
+#themeToggle {
+    transition: all 0.3s ease;
+}
+
+#themeToggle:hover {
+    transform: rotate(180deg);
+}
+
+/* Success/Error States */
+.alert-custom {
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    padding: 1rem 1.25rem;
+}
+
+.alert-success-custom {
+    background-color: rgba(28, 200, 138, 0.1);
+    color: var(--dashboard-success);
+    border-left: 4px solid var(--dashboard-success);
+}
+
+.alert-danger-custom {
+    background-color: rgba(231, 74, 59, 0.1);
+    color: var(--dashboard-danger);
+    border-left: 4px solid var(--dashboard-danger);
+}

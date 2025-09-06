@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>システム設定 - CryptoAgent</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet">
+</head>
+<body data-theme="light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard">
+                <i class="fas fa-chart-line me-2"></i>
+                CryptoAgent
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/dashboard">
+                    <i class="fas fa-tachometer-alt me-1"></i>ダッシュボード
+                </a>
+                <a class="nav-link" href="/news">
+                    <i class="fas fa-newspaper me-1"></i>ニュース
+                </a>
+                <button id="themeToggle" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="text-center">
+                    <h1><i class="fas fa-cog text-primary"></i> システム設定</h1>
+                    <p class="lead">API キーとシステム設定を管理</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Form -->
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <!-- API Keys Section -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-key text-primary"></i> API キー設定</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Gemini API Key -->
+                        <div class="mb-3">
+                            <label for="geminiApiKey" class="form-label">
+                                <i class="fab fa-google text-warning"></i>
+                                Gemini API キー
+                                <span class="badge bg-success ms-2">推奨</span>
+                            </label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="geminiApiKey" 
+                                       placeholder="AIによる高精度な翻訳・要約のためのGemini APIキー">
+                                <button class="btn btn-outline-secondary" type="button" id="toggleGemini">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle text-info"></i>
+                                <a href="https://makersuite.google.com/app/apikey" target="_blank">
+                                    Google AI Studio
+                                </a>でAPIキーを取得できます。無料枠があります。
+                            </div>
+                        </div>
+
+                        <!-- CoinGecko API Key -->
+                        <div class="mb-3">
+                            <label for="coingeckoApiKey" class="form-label">
+                                <i class="fas fa-chart-line text-info"></i>
+                                CoinGecko API キー
+                                <span class="badge bg-info ms-2">オプション</span>
+                            </label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="coingeckoApiKey" 
+                                       placeholder="高頻度のデータ取得のためのCoinGecko Pro APIキー">
+                                <button class="btn btn-outline-secondary" type="button" id="toggleCoinGecko">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle text-info"></i>
+                                無料版でも利用可能。Proプランで制限解除。
+                                <a href="https://www.coingecko.com/en/api" target="_blank">詳細はこちら</a>
+                            </div>
+                        </div>
+
+                        <!-- Save API Keys -->
+                        <div class="d-grid">
+                            <button class="btn btn-primary" id="saveApiKeys">
+                                <i class="fas fa-save"></i> API キーを保存
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Translation Settings -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-language text-primary"></i> 翻訳設定</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enableGeminiTranslation" checked>
+                                <label class="form-check-label" for="enableGeminiTranslation">
+                                    Gemini AIによる高精度翻訳を有効にする
+                                </label>
+                            </div>
+                            <div class="form-text">
+                                無効にすると、基本的なキーワード翻訳のみになります。
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enableKeywordFallback" checked>
+                                <label class="form-check-label" for="enableKeywordFallback">
+                                    キーワード翻訳フォールバックを有効にする
+                                </label>
+                            </div>
+                            <div class="form-text">
+                                Gemini AIが利用できない場合に、キーワードベースの翻訳を使用します。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Sources Settings -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-rss text-primary"></i> ニュースソース設定</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="maxNewsArticles" class="form-label">最大取得記事数</label>
+                            <input type="range" class="form-range" min="10" max="100" step="10" 
+                                   id="maxNewsArticles" value="60">
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted">10</small>
+                                <small id="maxNewsValue" class="text-primary font-weight-bold">60</small>
+                                <small class="text-muted">100</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">有効なニュースソース</label>
+                            <div id="newsSources">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="cointelegraph" id="source1" checked>
+                                    <label class="form-check-label" for="source1">
+                                        Cointelegraph
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="bitcoinist" id="source2" checked>
+                                    <label class="form-check-label" for="source2">
+                                        Bitcoinist
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="newsbtc" id="source3" checked>
+                                    <label class="form-check-label" for="source3">
+                                        NewsBTC
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="cryptopotato" id="source4" checked>
+                                    <label class="form-check-label" for="source4">
+                                        CryptoPotato
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="coindesk" id="source5" checked>
+                                    <label class="form-check-label" for="source5">
+                                        CoinDesk
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="decrypt" id="source6" checked>
+                                    <label class="form-check-label" for="source6">
+                                        Decrypt
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Status -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-heartbeat text-primary"></i> システム状態</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="status-indicator bg-success me-2"></div>
+                                    <span>Gemini AI</span>
+                                    <span class="badge bg-success ms-auto" id="geminiStatus">未設定</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="status-indicator bg-info me-2"></div>
+                                    <span>CoinGecko API</span>
+                                    <span class="badge bg-info ms-auto" id="coingeckoStatus">接続済み</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="status-indicator bg-success me-2"></div>
+                                    <span>ニュース取得</span>
+                                    <span class="badge bg-success ms-auto" id="newsStatus">正常</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="status-indicator bg-warning me-2"></div>
+                                    <span>翻訳システム</span>
+                                    <span class="badge bg-warning ms-auto" id="translationStatus">基本</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save All Settings -->
+                <div class="d-grid">
+                    <button class="btn btn-success btn-lg" id="saveAllSettings">
+                        <i class="fas fa-check"></i> すべての設定を保存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Modals -->
+    <div class="modal fade" id="statusModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="statusModalTitle">設定保存</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="statusModalBody">
+                    設定が正常に保存されました。
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            
+            const icon = themeToggle.querySelector('i');
+            icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        });
+
+        // Password toggle functionality
+        document.getElementById('toggleGemini').addEventListener('click', function() {
+            const input = document.getElementById('geminiApiKey');
+            const icon = this.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        });
+
+        document.getElementById('toggleCoinGecko').addEventListener('click', function() {
+            const input = document.getElementById('coingeckoApiKey');
+            const icon = this.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        });
+
+        // Max news articles slider
+        const maxNewsSlider = document.getElementById('maxNewsArticles');
+        const maxNewsValue = document.getElementById('maxNewsValue');
+        
+        maxNewsSlider.addEventListener('input', function() {
+            maxNewsValue.textContent = this.value;
+        });
+
+        // Save API keys
+        document.getElementById('saveApiKeys').addEventListener('click', function() {
+            const geminiKey = document.getElementById('geminiApiKey').value;
+            const coingeckoKey = document.getElementById('coingeckoApiKey').value;
+            
+            // Simulate API call to save keys
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 保存中...';
+            
+            setTimeout(() => {
+                this.innerHTML = '<i class="fas fa-check"></i> 保存完了';
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-success');
+                
+                // Update status indicators
+                if (geminiKey) {
+                    document.getElementById('geminiStatus').textContent = '設定済み';
+                    document.getElementById('translationStatus').textContent = '高精度';
+                    document.getElementById('translationStatus').className = 'badge bg-success ms-auto';
+                }
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-save"></i> API キーを保存';
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-primary');
+                }, 2000);
+            }, 1000);
+        });
+
+        // Save all settings
+        document.getElementById('saveAllSettings').addEventListener('click', function() {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 保存中...';
+            
+            setTimeout(() => {
+                const modal = new bootstrap.Modal(document.getElementById('statusModal'));
+                modal.show();
+                
+                this.innerHTML = '<i class="fas fa-check"></i> すべての設定を保存';
+            }, 1000);
+        });
+
+        // Load current settings on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if Gemini API key is already set
+            // This would normally be loaded from the server
+        });
+    </script>
+
+    <style>
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        
+        .card-header {
+            background-color: var(--bs-light);
+            border-bottom: 1px solid var(--bs-border-color);
+        }
+        
+        [data-theme="dark"] .card {
+            background-color: #2d3748;
+            color: #e2e8f0;
+        }
+        
+        [data-theme="dark"] .card-header {
+            background-color: #4a5568;
+            border-bottom-color: #4a5568;
+        }
+        
+        [data-theme="dark"] .form-control {
+            background-color: #4a5568;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        [data-theme="dark"] .form-control:focus {
+            background-color: #4a5568;
+            border-color: #3182ce;
+            color: #e2e8f0;
+        }
+    </style>
+</body>
+</html>

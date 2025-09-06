@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仮想通貨分析ダッシュボード</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.44.0/dist/apexcharts.min.js"></script>
+</head>
+<body data-theme="light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-chart-line me-2"></i>
+                CryptoAgent Dashboard
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#dashboard">
+                            <i class="fas fa-tachometer-alt me-1"></i>ダッシュボード
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#analysis">
+                            <i class="fas fa-chart-bar me-1"></i>分析
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#portfolio">
+                            <i class="fas fa-briefcase me-1"></i>ポートフォリオ
+                        </a>
+                    </li>
+                </ul>
+                <div class="navbar-nav">
+                    <button id="themeToggle" class="btn btn-outline-light me-2">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4 py-3">
+        <!-- Market Overview Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-start-primary shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Bitcoin価格
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="btc-price">
+                                    <div class="loading-skeleton"></div>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fab fa-bitcoin fa-2x text-warning"></i>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <small class="text-muted">24h変動: </small>
+                            <span id="btc-change" class="font-weight-bold">
+                                <div class="loading-skeleton small"></div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-start-success shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Ethereum価格
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="eth-price">
+                                    <div class="loading-skeleton"></div>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fab fa-ethereum fa-2x text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <small class="text-muted">24h変動: </small>
+                            <span id="eth-change" class="font-weight-bold">
+                                <div class="loading-skeleton small"></div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-start-info shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    総市場時価総額
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="total-market-cap">
+                                    <div class="loading-skeleton"></div>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-globe-americas fa-2x text-info"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-start-warning shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Fear & Greed指数
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="fear-greed-index">
+                                    <div class="loading-skeleton"></div>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-thermometer-half fa-2x text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Content -->
+        <div class="row">
+            <!-- Price Chart -->
+            <div class="col-xl-8 col-lg-7">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fas fa-chart-line me-2"></i>価格チャート
+                        </h6>
+                        <div class="dropdown">
+                            <select id="chart-crypto-select" class="form-select form-select-sm">
+                                <option value="bitcoin">Bitcoin (BTC)</option>
+                                <option value="ethereum">Ethereum (ETH)</option>
+                                <option value="cardano">Cardano (ADA)</option>
+                                <option value="solana">Solana (SOL)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="price-chart" style="height: 400px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Analysis Panel -->
+            <div class="col-xl-4 col-lg-5">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fas fa-bolt me-2"></i>クイック分析
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="crypto-selector mb-3">
+                            <select id="quick-analysis-select" class="form-select">
+                                <option value="">分析する仮想通貨を選択</option>
+                                <option value="bitcoin">Bitcoin (BTC)</option>
+                                <option value="ethereum">Ethereum (ETH)</option>
+                                <option value="cardano">Cardano (ADA)</option>
+                                <option value="polygon">Polygon (MATIC)</option>
+                                <option value="solana">Solana (SOL)</option>
+                            </select>
+                        </div>
+                        <button id="quick-analyze-btn" class="btn btn-primary w-100 mb-3" disabled>
+                            <i class="fas fa-play me-2"></i>クイック分析実行
+                        </button>
+                        <div id="quick-analysis-results" class="analysis-results-mini">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-info-circle"></i>
+                                <p class="mt-2">仮想通貨を選択して分析を開始してください</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agent Status -->
+                <div class="card shadow-sm">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fas fa-robot me-2"></i>エージェント状況
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="agent-status-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-chart-bar text-primary"></i> テクニカル分析</span>
+                                <span class="badge bg-success">アクティブ</span>
+                            </div>
+                        </div>
+                        <div class="agent-status-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-comments text-info"></i> センチメント分析</span>
+                                <span class="badge bg-success">アクティブ</span>
+                            </div>
+                        </div>
+                        <div class="agent-status-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-shield-alt text-warning"></i> リスク評価</span>
+                                <span class="badge bg-success">アクティブ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- News and Market Sentiment -->
+        <div class="row mt-4">
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fas fa-newspaper me-2"></i>最新ニュース
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="crypto-news" class="news-list">
+                            <div class="loading-placeholder">
+                                <div class="loading-skeleton"></div>
+                                <div class="loading-skeleton"></div>
+                                <div class="loading-skeleton"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fas fa-chart-pie me-2"></i>市場センチメント
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="sentiment-chart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Analysis Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fas fa-microscope me-2"></i>詳細分析結果
+                        </h6>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#analysisModal">
+                            <i class="fas fa-plus me-1"></i>新規分析
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="detailed-analysis-results" class="detailed-results">
+                            <div class="text-center text-muted py-5">
+                                <i class="fas fa-search fa-3x mb-3"></i>
+                                <h5>詳細分析がまだ実行されていません</h5>
+                                <p>「新規分析」ボタンから分析を開始してください</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-cog me-2"></i>設定
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">更新頻度</label>
+                        <select class="form-select" id="update-frequency">
+                            <option value="10">10秒</option>
+                            <option value="30" selected>30秒</option>
+                            <option value="60">1分</option>
+                            <option value="300">5分</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">通知設定</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="price-alerts" checked>
+                            <label class="form-check-label" for="price-alerts">
+                                価格アラート
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="news-alerts">
+                            <label class="form-check-label" for="news-alerts">
+                                重要ニュース通知
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                    <button type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis Modal -->
+    <div class="modal fade" id="analysisModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-microscope me-2"></i>詳細分析設定
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="detailed-analysis-form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">仮想通貨</label>
+                                    <select class="form-select" id="analysis-crypto" required>
+                                        <option value="">選択してください</option>
+                                        <option value="bitcoin">Bitcoin (BTC)</option>
+                                        <option value="ethereum">Ethereum (ETH)</option>
+                                        <option value="cardano">Cardano (ADA)</option>
+                                        <option value="polygon">Polygon (MATIC)</option>
+                                        <option value="solana">Solana (SOL)</option>
+                                        <option value="chainlink">Chainlink (LINK)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">分析深度</label>
+                                    <select class="form-select" id="analysis-depth">
+                                        <option value="quick">クイック</option>
+                                        <option value="standard" selected>標準</option>
+                                        <option value="deep">詳細</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">エージェント選択</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="tech-agent" checked>
+                                        <label class="form-check-label" for="tech-agent">
+                                            テクニカル分析
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="sentiment-agent" checked>
+                                        <label class="form-check-label" for="sentiment-agent">
+                                            センチメント分析
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="risk-agent" checked>
+                                        <label class="form-check-label" for="risk-agent">
+                                            リスク評価
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                    <button type="button" class="btn btn-primary" id="start-detailed-analysis">
+                        <i class="fas fa-play me-1"></i>分析開始
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

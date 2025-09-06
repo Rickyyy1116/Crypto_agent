@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>CryptoAgent Mobile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/mobile.css') }}" rel="stylesheet">
+    <meta name="theme-color" content="#4e73df">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
+</head>
+<body>
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav fixed-top">
+        <div class="container-fluid">
+            <div class="nav-header d-flex justify-content-between align-items-center p-3">
+                <h1 class="nav-title"><i class="fas fa-chart-line me-2"></i>CryptoAgent</h1>
+                <button class="btn btn-outline-light btn-sm" id="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobile-menu">
+        <div class="mobile-menu-content">
+            <div class="mobile-menu-header">
+                <h5>メニュー</h5>
+                <button class="btn btn-outline-light btn-sm" id="mobile-menu-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mobile-menu-items">
+                <a href="#quick-analysis" class="mobile-menu-item">
+                    <i class="fas fa-bolt"></i>クイック分析
+                </a>
+                <a href="#price-watch" class="mobile-menu-item">
+                    <i class="fas fa-eye"></i>価格監視
+                </a>
+                <a href="#news" class="mobile-menu-item">
+                    <i class="fas fa-newspaper"></i>ニュース
+                </a>
+                <a href="#portfolio" class="mobile-menu-item">
+                    <i class="fas fa-briefcase"></i>ポートフォリオ
+                </a>
+                <a href="#settings" class="mobile-menu-item">
+                    <i class="fas fa-cog"></i>設定
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="mobile-content">
+        <!-- Price Cards Swiper -->
+        <section class="price-cards-section">
+            <div class="swiper-container price-swiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="price-card btc-card">
+                            <div class="price-card-header">
+                                <i class="fab fa-bitcoin"></i>
+                                <span class="crypto-name">Bitcoin</span>
+                            </div>
+                            <div class="price-info">
+                                <div class="current-price" id="mobile-btc-price">$45,234</div>
+                                <div class="price-change" id="mobile-btc-change">+2.34%</div>
+                            </div>
+                            <div class="price-chart-mini" id="btc-mini-chart"></div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="price-card eth-card">
+                            <div class="price-card-header">
+                                <i class="fab fa-ethereum"></i>
+                                <span class="crypto-name">Ethereum</span>
+                            </div>
+                            <div class="price-info">
+                                <div class="current-price" id="mobile-eth-price">$2,834</div>
+                                <div class="price-change" id="mobile-eth-change">-1.56%</div>
+                            </div>
+                            <div class="price-chart-mini" id="eth-mini-chart"></div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="price-card ada-card">
+                            <div class="price-card-header">
+                                <i class="fas fa-coins"></i>
+                                <span class="crypto-name">Cardano</span>
+                            </div>
+                            <div class="price-info">
+                                <div class="current-price" id="mobile-ada-price">$0.48</div>
+                                <div class="price-change" id="mobile-ada-change">+5.23%</div>
+                            </div>
+                            <div class="price-chart-mini" id="ada-mini-chart"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </section>
+
+        <!-- Quick Analysis Section -->
+        <section class="mobile-section" id="quick-analysis">
+            <div class="section-header">
+                <h3><i class="fas fa-bolt"></i> クイック分析</h3>
+            </div>
+            <div class="section-content">
+                <div class="mobile-form-group">
+                    <select class="mobile-select" id="mobile-crypto-select">
+                        <option value="">仮想通貨を選択</option>
+                        <option value="bitcoin">Bitcoin (BTC)</option>
+                        <option value="ethereum">Ethereum (ETH)</option>
+                        <option value="cardano">Cardano (ADA)</option>
+                        <option value="solana">Solana (SOL)</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary w-100 mobile-btn" id="mobile-analyze-btn" disabled>
+                    <i class="fas fa-play me-2"></i>分析開始
+                </button>
+                <div class="mobile-results" id="mobile-analysis-results">
+                    <div class="results-placeholder">
+                        <i class="fas fa-info-circle"></i>
+                        <p>仮想通貨を選択して分析を開始してください</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Price Alerts Section -->
+        <section class="mobile-section" id="price-watch">
+            <div class="section-header">
+                <h3><i class="fas fa-bell"></i> 価格アラート</h3>
+                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#alertModal">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div class="section-content">
+                <div class="alert-list" id="mobile-alerts">
+                    <div class="alert-item">
+                        <div class="alert-crypto">
+                            <i class="fab fa-bitcoin text-warning"></i>
+                            <span>Bitcoin</span>
+                        </div>
+                        <div class="alert-condition">≥ $50,000</div>
+                        <div class="alert-status">
+                            <span class="badge bg-warning">待機中</span>
+                        </div>
+                    </div>
+                    <div class="alert-item">
+                        <div class="alert-crypto">
+                            <i class="fab fa-ethereum text-primary"></i>
+                            <span>Ethereum</span>
+                        </div>
+                        <div class="alert-condition">≤ $2,500</div>
+                        <div class="alert-status">
+                            <span class="badge bg-success">アクティブ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- News Section -->
+        <section class="mobile-section" id="news">
+            <div class="section-header">
+                <h3><i class="fas fa-newspaper"></i> ニュース</h3>
+                <button class="btn btn-sm btn-outline-primary" id="refresh-news">
+                    <i class="fas fa-refresh"></i>
+                </button>
+            </div>
+            <div class="section-content">
+                <div class="mobile-news-list" id="mobile-news">
+                    <!-- News items will be loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="mobile-bottom-nav fixed-bottom">
+        <div class="bottom-nav-item active" data-target="quick-analysis">
+            <i class="fas fa-bolt"></i>
+            <span>分析</span>
+        </div>
+        <div class="bottom-nav-item" data-target="price-watch">
+            <i class="fas fa-bell"></i>
+            <span>アラート</span>
+        </div>
+        <div class="bottom-nav-item" data-target="news">
+            <i class="fas fa-newspaper"></i>
+            <span>ニュース</span>
+        </div>
+        <div class="bottom-nav-item" data-target="portfolio">
+            <i class="fas fa-briefcase"></i>
+            <span>ポートフォリオ</span>
+        </div>
+    </nav>
+
+    <!-- Price Alert Modal -->
+    <div class="modal fade" id="alertModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">価格アラート設定</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="alert-form">
+                        <div class="mb-3">
+                            <label class="form-label">仮想通貨</label>
+                            <select class="form-select" id="alert-crypto">
+                                <option value="bitcoin">Bitcoin (BTC)</option>
+                                <option value="ethereum">Ethereum (ETH)</option>
+                                <option value="cardano">Cardano (ADA)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">条件</label>
+                            <select class="form-select" id="alert-condition">
+                                <option value="above">価格が上回る</option>
+                                <option value="below">価格が下回る</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">価格 (USD)</label>
+                            <input type="number" class="form-control" id="alert-price" step="0.01" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                    <button type="button" class="btn btn-primary" id="save-alert">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="mobile-loading" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner-border text-primary mb-3"></div>
+            <p>処理中...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js"></script>
+    <script src="{{ url_for('static', filename='js/mobile.js') }}"></script>
+</body>
+</html>

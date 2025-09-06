@@ -1,0 +1,52 @@
+# Core dependencies for Cryptocurrency Trading Assistant Agent
+asyncio-core>=1.0.0
+requests>=2.31.0
+feedparser>=6.0.10
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Web framework dependencies
+Flask>=2.3.3
+Flask-SocketIO>=5.3.6
+python-socketio>=5.8.0
+python-engineio>=4.7.1
+
+# Optional LLM integration (if user wants to add AI analysis)
+openai>=1.0.0
+anthropic>=0.7.0
+langchain>=0.1.0
+langchain-openai>=0.0.5
+langchain-anthropic>=0.1.0
+langchain-google-genai>=1.0.0
+
+# Data visualization and analysis (optional)
+matplotlib>=3.7.0
+plotly>=5.17.0
+seaborn>=0.12.0
+
+# Utility libraries
+python-dotenv>=1.0.0
+python-dateutil>=2.8.2
+pytz>=2023.3
+rich>=13.0.0
+click>=8.1.0
+
+# Development dependencies (optional)
+pytest>=7.4.0
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.5.0
+
+# Security and API handling
+cryptography>=41.0.0
+certifi>=2023.7.22
+urllib3>=2.0.4
+
+# Additional crypto-specific libraries
+ccxt>=4.1.0  # Cryptocurrency exchange library
+python-binance>=1.0.17  # Binance API
+websocket-client>=1.6.0  # WebSocket support for real-time data
+
+# Background tasks (if needed)
+celery>=5.3.0
+redis>=4.6.0
